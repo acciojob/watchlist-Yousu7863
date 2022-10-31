@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("movies")
 public class MovieController {
-HashMap<Movie,Director> moviemap=new HashMap<>();
+HashMap<String,String> moviemap=new HashMap<>();
 private List<Movie>movielist;
 
     public List<Movie> getMovielist() {
@@ -32,16 +32,7 @@ private List<Movie>movielist;
     //@Autowired
   //  Movie movie;
     //  @GetMapping("/get-movie-by-name/{name}")
-@GetMapping("/get-movie-by-name/{name}")
-public ResponseEntity getMovieByname(@PathVariable String name){
-        for(Movie m:movielist){
-            if(m.getName()==name){
-                return new ResponseEntity<>(m,HttpStatus.OK);
-            }
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
+//------------------------------------------
 @PostMapping("/add_movie")
     public ResponseEntity<String> addMovie(@RequestBody Movie movie){
     try {
@@ -52,6 +43,7 @@ public ResponseEntity getMovieByname(@PathVariable String name){
         return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
     }
 }
+//----------------------------- 2
 @PostMapping("/add_director")
  public ResponseEntity<String> addDirector(@RequestBody Director director) {
     try {
@@ -61,6 +53,27 @@ public ResponseEntity getMovieByname(@PathVariable String name){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
+// ---------- 3 number
+
+@PutMapping("/add-movie-director-pair")
+public ResponseEntity addMovieDirectorPair(@PathVariable String mname,@PathVariable String dname){
+    List<Movie>moname=new ArrayList<>();
+    List<Director>doname=new ArrayList<>();
+    for(Movie moi:movielist){
+        if(moi.getName()==mname)
+            moname.add(moi);
+    }
+    for(Director dio:directlist){
+        if(dio.getName()==dname)
+            doname.add(dio);
+    }
+    for(int i=0;i<moname.size() && i<doname.size();i++){
+        if(moname.get(i).getImdbRating()==doname.get(i).getImdbRating())
+            moviemap.put(doname.get(i).getName(),moname.get(i).getName());
+    }
+    return new ResponseEntity<>("pair success",HttpStatus.CREATED);
+}
+//--------------------------4 number
     @GetMapping("/get-movie-by-name/{name}")
     public ResponseEntity getDirectorByname(@PathVariable String name){
         for(Director d:directlist){
@@ -70,6 +83,17 @@ public ResponseEntity getMovieByname(@PathVariable String name){
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+    //-------------------------5
+    @GetMapping("/get-movie-by-name/{name}")
+    public ResponseEntity getMovieByname(@PathVariable String name){
+        for(Movie m:movielist){
+            if(m.getName()==name){
+                return new ResponseEntity<>(m,HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+    //-------------------------------------------------------6
     List<String>moviename=new ArrayList<>();
     @GetMapping("/get-movies-by-director-name/{director}")
     public ResponseEntity<List<String>> getMoviesByDirectorName(@PathVariable String name){
@@ -87,14 +111,14 @@ public ResponseEntity getMovieByname(@PathVariable String name){
       }
       return new ResponseEntity<>(moviename,HttpStatus.CREATED);
     }
-    //------------
+    //-----------------------
     @GetMapping("/get-all-movies")
     public ResponseEntity findAllMovies(){
         return new ResponseEntity(movielist,HttpStatus.CREATED);
     }
-    //---------------
+    //---------------------------------
     @DeleteMapping("/delete-director-by-name")
-    public ResponseEntity  deleteDirectorByName(@RequestParam String name){
+    public ResponseEntity  deleteDirectorByName(@RequestParam("name") String name){
         List<Director>did=new ArrayList<>();
         for(int i=0;i<directlist.size();i++){
             if(directlist.get(i).getName()==name){
@@ -107,7 +131,8 @@ public ResponseEntity getMovieByname(@PathVariable String name){
             }
         }
             return new ResponseEntity<>("delete successfull",HttpStatus.OK);
-    }@GetMapping("/delete-all-directors")
+    }//---------------*************------------
+    @GetMapping("/delete-all-directors")
     public ResponseEntity  deleteAllDirectors(){
         movielist=new ArrayList<>();
         directlist=new ArrayList<>();
