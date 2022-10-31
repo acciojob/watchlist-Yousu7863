@@ -1,2 +1,4 @@
-package com.driver;public class MovieRepository {
+package com.driver;
+
+public class MovieRepository {
 }
