@@ -12,9 +12,9 @@ import java.util.List;
 @RestController
 @RequestMapping("movies")
 public class MovieController {
-HashMap<String,String> moviemap=new HashMap<>();
-List<Movie>movielist=new ArrayList<>();
-List<Director>directlist=new ArrayList<>();
+//HashMap<String,String> moviemap=new HashMap<>();
+//List<Movie>movielist=new ArrayList<>();
+//List<Director>directlist=new ArrayList<>();
 
     //@Autowired
   //  Movie movie;
